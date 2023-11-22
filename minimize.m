@@ -1,24 +1,33 @@
 % by James Pretorius
 % first row of inputs is objective function
-function [max] = minimize(z, nonbasic, slack, artificial, b)
-    initial = [z nonbasic slack artificial b] % debug
+function [max] = minimize(z, choice, slack, artificial, b)
+    Ab = [z choice slack artificial b] % debug
+
+    % used to track where things are
+    numChoice = size(choice, 2)
+    startColChoice = 2;
+    numSlack = size(slack, 2)
+    startColSlack = startColChoice + numChoice;
+    numArtificial = size(artificial, 2)
+    startColArtificial = startColSlack + numSlack;
 
     % move M out of artificial columns
-    for nthArtificial = 1:size(artificial, 2)
-        for row = 2:size(artificial, 1)
-            if artificial(row, nthArtificial) ~= 0
+    % loop through the artificial columns
+    for currIndexArtificialCol = startColArtificial:startColArtificial + (numArtificial - 1)
+        % find the row for artifical value of the current col
+        for row = 2:size(Ab, 1)
+            if Ab(row, currIndexArtificialCol) ~= 0
                 sourcePivotRow = row;
                 break
             end
         end
 
         destPivotRow = 1; % objective function row
-
-        multiplier = artificial(1);
-        [z, nonbasic, slack, artificial, b] = pivot(multiplier, sourcePivotRow, destPivotRow, z, nonbasic, slack, artificial, b);
+        Ab = pivot(destPivotRow, currIndexArtificialCol, sourcePivotRow, Ab);
     end
 
-    afterMovingM = [z nonbasic slack artificial b] % debug
+    afterMoving = Ab % debug
+    return
 
     for nthNonbasic = 1:size(nonbasic, 2)
         if isMaximized(nonbasic)
@@ -47,6 +56,15 @@ function [max] = minimize(z, nonbasic, slack, artificial, b)
     max = b(1)
 end
 
+% Makes (destRow, col)=zero by a pivot from (sourceRow, col)
+function AbOut = pivot(destRow, col, sourceRow, Ab)
+    multiplier = Ab(destRow, col)/Ab(sourceRow, col)
+
+    Ab(destRow, :) -= multiplier*Ab(sourceRow, :);
+
+    AbOut = round6(Ab);
+end
+
 function is = isMaximized(nonbasic)
     % is all elements in first row (aka non basic vars of objective function) greater than zero?
     is = true;
@@ -56,19 +74,6 @@ function is = isMaximized(nonbasic)
             return
         end
     end
-end
-
-function [zOut, nonbasicOut, slackOut, artificialOut, bOut] = pivot(multiplier, sourceRow, destRow, z, nonbasic, slack, artificial, b)
-    nonbasic(destRow, :) -= multiplier*nonbasic(sourceRow, :);
-    slack(destRow, :) -= multiplier*slack(sourceRow, :);
-    artificial(destRow, :) -= multiplier*artificial(sourceRow, :);
-    b(destRow, :) -= multiplier*b(sourceRow, :);
-
-    zOut = round6(z); % no need to multiply b/c it shouldn't change
-    nonbasicOut = round6(nonbasic);
-    slackOut = round6(slack);
-    artificialOut = round6(artificial);
-    bOut = round6(b);
 end
 
 % find the constraint row with the smallest ratio
