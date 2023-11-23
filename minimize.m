@@ -1,6 +1,6 @@
 % by James Pretorius
 % first row of inputs is objective function
-function [max] = minimize(z, choice, slack, artificial, b)
+function values = minimize(z, choice, slack, artificial, b)
     format rat % debug
     Ab = [z choice slack artificial b] % debug
 
@@ -46,8 +46,8 @@ function [max] = minimize(z, choice, slack, artificial, b)
         currSmallest = 0;
         for col = basicCols
             if Ab(1, col) < currSmallest
-                indexSmlSolCoeff = col
-                currSmallest = Ab(1, col)
+                indexSmlSolCoeff = col;
+                currSmallest = Ab(1, col);
             end
         end
 
@@ -61,10 +61,7 @@ function [max] = minimize(z, choice, slack, artificial, b)
         pivotRow = 0;
         % loop through all constraint rows (1st row is the objective function)
         for currRow = 2:size(Ab, 1)
-            currRow
-            indexSmlSolCoeff
-            Ab(currRow, indexSmlSolCoeff)
-            rowRatio = Ab(currRow, end)/Ab(currRow, indexSmlSolCoeff)
+            rowRatio = Ab(currRow, end)/Ab(currRow, indexSmlSolCoeff);
             % if the ratio is the lowest and is positive
             if rowRatio <= minRatio && rowRatio > 0
                 pivotRow = currRow;
@@ -89,7 +86,18 @@ function [max] = minimize(z, choice, slack, artificial, b)
         afterPivot = Ab % debug
     end
 
-    max = Ab(1, end)
+    % SOLVE FOR VALUES
+    values = zeros(size(Ab, 2), 1);
+    for col = [1 basicCols] % z and basic cols
+        % find non-zero value in row
+        for row = 1:size(Ab, 1)
+            if Ab(row, col) ~= 0
+                % x = coeff/b
+                values(col) = Ab(row, end)/Ab(row, col);
+                break
+            end
+        end
+    end
 end
 
 % Makes (destRow, col)=zero by a pivot from (sourceRow, col)
