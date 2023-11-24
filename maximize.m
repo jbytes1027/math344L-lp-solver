@@ -1,6 +1,6 @@
 % by James Pretorius
 % first row of inputs is objective function
-function values = minimize(z, choice, slack, artificial, b)
+function values = maximize(z, choice, slack, artificial, b)
     format rat % debug
     Ab = [z choice slack artificial b] % debug
 
@@ -40,6 +40,7 @@ function values = minimize(z, choice, slack, artificial, b)
 
     basicCols
 
+    % for l=1:6
     while true
         % FIND THE SMALLEST NEGATIVE COEFFICIENT IN THE OBJECTIVE FUNCTION (IN THE BASIC COLUMNS)
         indexSmlSolCoeff = -1;
@@ -56,14 +57,18 @@ function values = minimize(z, choice, slack, artificial, b)
         end
 
 
+        % TODO Choose randomly if a tie
         % FIND THE CONSTRAINT ROW WITH THE SMALLEST POSITIVE RATIO
         minRatio = intmax;
         pivotRow = 0;
         % loop through all constraint rows (1st row is the objective function)
         for currRow = 2:size(Ab, 1)
+            if Ab(currRow, indexSmlSolCoeff) <= 0
+                continue % skip if coefficient is not positive
+            end
             rowRatio = Ab(currRow, end)/Ab(currRow, indexSmlSolCoeff);
             % if the ratio is the lowest and is positive
-            if rowRatio <= minRatio && rowRatio > 0
+            if rowRatio <= minRatio && rowRatio >= 0
                 pivotRow = currRow;
                 minRatio = rowRatio;
             end
@@ -74,7 +79,10 @@ function values = minimize(z, choice, slack, artificial, b)
         end
 
 
-        % MAKE EVERY OTHER ROW IN PIVOT COL 0
+        % TO MAKE PIVOT EQUAL 1, DIV PIVOT ROW BY PIVOT NUM
+        Ab(pivotRow, :) /= Ab(pivotRow, indexSmlSolCoeff);
+
+        % MAKE EVERY OTHER ROW NUM IN PIVOT COL 0 BY ROW OPP
         for destPivotRow = 1:size(z, 1)
             if destPivotRow == pivotRow
                 continue
@@ -83,6 +91,13 @@ function values = minimize(z, choice, slack, artificial, b)
             Ab = pivot(destPivotRow, indexSmlSolCoeff, pivotRow, Ab);
         end
 
+        % % FIX B
+        % for row = 1:size(Ab, 1)
+        %     % if rhs < 0, negate row
+        %     if Ab(row, end) < 0
+        %         Ab(row, :) *= -1
+        %     end
+        % end
         afterPivot = Ab % debug
     end
 
