@@ -79,13 +79,6 @@ function values = maximize(z, choice, slack, artificial, b)
             Ab = pivot(destPivotRow, indexSmlSolCoeff, pivotRow, Ab);
         end
 
-        % % FIX B
-        % for row = 1:size(Ab, 1)
-        %     % if rhs < 0, negate row
-        %     if Ab(row, end) < 0
-        %         Ab(row, :) *= -1
-        %     end
-        % end
         afterPivot = Ab % debug
     end
 
