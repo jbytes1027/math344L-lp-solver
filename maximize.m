@@ -74,7 +74,7 @@ function values = maximize(Ab, numChoice)
         end
 
 
-        % TO MAKE PIVOT EQUAL 1, DIV PIVOT ROW BY PIVOT NUM
+        % MAKE PIVOT EQUAL 1 BY DIVIDING PIVOT ROW BY PIVOT NUM
         Ab(pivotRow, :) /= Ab(pivotRow, indexSmlSolCoeff);
 
         % MAKE EVERY OTHER ROW NUM IN PIVOT COL 0 BY ROW OPP
@@ -123,7 +123,7 @@ function AbOut = pivot(destRow, col, sourceRow, Ab)
     AbOut = round5(Ab);
 end
 
-% round to six decimals
+% round to five decimals
 function rounded = round5(M)
     rounded = round(M*100000)/100000;
 end
