@@ -7,12 +7,11 @@ Ab = [z choice slack b]
 maximize(Ab, 2) % solution should be 282 (36, 6)
 
 % brilliant
-z = [-1; 0; 0; 0]
-choice = [1 -10; -1 5; 6 5; 1 1]
-slack = [0 0 0; 1 0 0; 0 1 0; 0 0 -1]
-artificial = [1000; 0; 0; 1]
-b = [0; 25; 60; 2]
-Ab = [z choice slack artificial b]
+Ab = [ -1      1    -10      0      0      0   1000      0 ;
+        0     -1      5      1      0      0      0     25 ;
+        0      6      5      0      1      0      0     60 ;
+        0      1      1      0      0     -1      1      2 ]
+
 maximize(Ab, 2) % solution should be [-55 5 6 0 0 9 0 0]'
 
 % minimize lab
@@ -49,6 +48,7 @@ slack = [0 0; 1 0; 0 1; 0 0]
 artificial = [1000; 0; 0; 1]
 b = [0; 4; 12; 18]
 Ab = [z choice slack artificial b]
+maximize(Ab, 2)
 
 % hiller p123
 z = [-1; 0; 0; 0]
@@ -57,3 +57,4 @@ slack = [0 0; 1 0; 0 0; 0 -1]
 artificial = [1000 1000; 0 0; 1 0; 0 1]
 b = [0; 2.7; 6; 6]
 Ab = [z choice slack artificial b]
+maximize(Ab, 2)
