@@ -1,30 +1,37 @@
 % by James Pretorius
 % first row of inputs is objective function
-function values = maximize(z, choice, slack, artificial, b)
+function values = maximize(Ab, numChoice)
     format rat % debug
-    Ab = [z choice slack artificial b] % debug
+    Ab % debug
 
     % used to track where things are
-    numChoice = size(choice, 2)
     startColChoice = 2;
-    numSlack = size(slack, 2)
-    startColSlack = startColChoice + numChoice;
-    numArtificial = size(artificial, 2)
-    startColArtificial = startColSlack + numSlack;
+    startNonbasic = startColChoice + numChoice
+
+
+    % GET LIST OF ARTIFICIAL COLS TO MOVE
+    artificalCols = [];
+    for col = startNonbasic:(size(Ab, 2) - 1)
+        if Ab(1, col) != 0
+            artificalCols = [artificalCols col];
+        end
+    end
+
+    artificalCols % debug
 
     % MOVE M OUT OF ARTIFICIAL COLUMNS
     % loop through the artificial columns
-    for currIndexArtificialCol = startColArtificial:startColArtificial + (numArtificial - 1)
+    for currArtificialCol = artificalCols
         % find the row for artifical value of the current col
         for row = 2:size(Ab, 1)
-            if Ab(row, currIndexArtificialCol) ~= 0
+            if Ab(row, currArtificialCol) ~= 0
                 sourcePivotRow = row;
                 break
             end
         end
 
         destPivotRow = 1; % objective function row
-        Ab = pivot(destPivotRow, currIndexArtificialCol, sourcePivotRow, Ab);
+        Ab = pivot(destPivotRow, currArtificialCol, sourcePivotRow, Ab);
     end
 
     afterMoving = Ab % debug
@@ -71,7 +78,7 @@ function values = maximize(z, choice, slack, artificial, b)
         Ab(pivotRow, :) /= Ab(pivotRow, indexSmlSolCoeff);
 
         % MAKE EVERY OTHER ROW NUM IN PIVOT COL 0 BY ROW OPP
-        for destPivotRow = 1:size(z, 1)
+        for destPivotRow = 1:size(Ab, 1)
             if destPivotRow == pivotRow
                 continue
             end
@@ -86,10 +93,12 @@ function values = maximize(z, choice, slack, artificial, b)
     basicCols = [];
     for col = 2:(size(Ab, 2)-1) % from 2 to end-1
         % if more than one non-zero in column
-        if nnz(Ab(:, col)) > 1
+        if nnz(Ab(:, col)) == 1
             basicCols = [basicCols col];
         end
     end
+
+    basicCols % debug
 
     % SOLVE FOR VALUES
     values = zeros(size(Ab, 2), 1);
