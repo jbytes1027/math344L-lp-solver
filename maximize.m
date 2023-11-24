@@ -121,10 +121,10 @@ function AbOut = pivot(destRow, col, sourceRow, Ab)
 
     Ab(destRow, :) -= multiplier*Ab(sourceRow, :);
 
-    AbOut = round6(Ab);
+    AbOut = round5(Ab);
 end
 
 % round to six decimals
-function rounded = round6(M)
-    rounded = round(M*1000000)/1000000;
+function rounded = round5(M)
+    rounded = round(M*100000)/100000;
 end
