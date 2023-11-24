@@ -29,23 +29,11 @@ function values = maximize(z, choice, slack, artificial, b)
 
     afterMoving = Ab % debug
 
-    % GET THE BASIC COLUMNS
-    basicCols = [];
-    for col = 2:(size(Ab, 2)-1) % from 2 to end-1
-        % if more than one non-zero in column
-        if nnz(Ab(:, col)) > 1
-            basicCols = [basicCols col];
-        end
-    end
-
-    basicCols
-
-    % for l=1:6
     while true
         % FIND THE SMALLEST NEGATIVE COEFFICIENT IN THE OBJECTIVE FUNCTION (IN THE BASIC COLUMNS)
         indexSmlSolCoeff = -1;
         currSmallest = 0;
-        for col = basicCols
+        for col = 2:(size(Ab, 2)-1)
             if Ab(1, col) < currSmallest
                 indexSmlSolCoeff = col;
                 currSmallest = Ab(1, col);
@@ -99,6 +87,15 @@ function values = maximize(z, choice, slack, artificial, b)
         %     end
         % end
         afterPivot = Ab % debug
+    end
+
+    % GET THE BASIC COLUMNS
+    basicCols = [];
+    for col = 2:(size(Ab, 2)-1) % from 2 to end-1
+        % if more than one non-zero in column
+        if nnz(Ab(:, col)) > 1
+            basicCols = [basicCols col];
+        end
     end
 
     % SOLVE FOR VALUES
