@@ -85,7 +85,7 @@ function values = maximize(Ab, numChoice)
     % GET THE BASIC COLUMNS
     basicCols = [];
     for col = 2:(size(Ab, 2)-1) % from 2 to end-1
-        % if more than one non-zero in column
+        % if one non-zero in column
         if nnz(Ab(:, col)) == 1
             basicCols = [basicCols col];
         end
@@ -94,10 +94,10 @@ function values = maximize(Ab, numChoice)
     basicCols % debug
 
     % SOLVE FOR VALUES
-    values = zeros(size(Ab, 2), 1);
+    values = zeros(size(Ab, 2)-1, 1);
     for col = [1 basicCols] % z and basic cols
         % find non-zero value in row
-        for row = 1:size(Ab, 1)
+        for row = 1:size(Ab, 1)-1
             if Ab(row, col) ~= 0
                 % x = coeff/b
                 values(col) = Ab(row, end)/Ab(row, col);
