@@ -38,17 +38,10 @@ function values = maximize(Ab, numChoice)
 
     while true
         % FIND THE SMALLEST NEGATIVE COEFFICIENT IN THE OBJECTIVE FUNCTION (IN THE BASIC COLUMNS)
-        colSmlSolCoeff = -1;
-        currSmallest = 0;
-        for col = 2:(size(Ab, 2)-1)
-            if Ab(1, col) < currSmallest
-                colSmlSolCoeff = col;
-                currSmallest = Ab(1, col);
-            end
-        end
+        [minValue, minCol] = min([0 Ab(1, 2:end-1)])
 
-        if colSmlSolCoeff == -1
-            break % nothing left todo
+        if minValue >= 0
+            break % nothing left todo, at optimal solution
         end
 
 
@@ -58,10 +51,10 @@ function values = maximize(Ab, numChoice)
         pivotRow = 0;
         % loop through all constraint rows (1st row is the objective function)
         for currRow = 2:size(Ab, 1)
-            if Ab(currRow, colSmlSolCoeff) <= 0
+            if Ab(currRow, minCol) <= 0
                 continue % skip if coefficient is not positive
             end
-            rowRatio = Ab(currRow, end)/Ab(currRow, colSmlSolCoeff);
+            rowRatio = Ab(currRow, end)/Ab(currRow, minCol);
             % if the ratio is the lowest and is positive
             if rowRatio <= minRatio && rowRatio >= 0
                 pivotRow = currRow;
@@ -75,7 +68,7 @@ function values = maximize(Ab, numChoice)
 
 
         % MAKE PIVOT EQUAL 1 BY DIVIDING PIVOT ROW BY PIVOT NUM
-        Ab(pivotRow, :) /= Ab(pivotRow, colSmlSolCoeff);
+        Ab(pivotRow, :) /= Ab(pivotRow, minCol);
 
         % MAKE EVERY OTHER ROW NUM IN PIVOT COL 0 BY ROW OPP
         for destPivotRow = 1:size(Ab, 1)
@@ -83,7 +76,7 @@ function values = maximize(Ab, numChoice)
                 continue
             end
 
-            Ab = pivot(destPivotRow, colSmlSolCoeff, pivotRow, Ab);
+            Ab = pivot(destPivotRow, minCol, pivotRow, Ab);
         end
 
         afterPivot = Ab % debug
