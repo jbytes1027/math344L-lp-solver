@@ -21,33 +21,33 @@ function values = maximize(Ab, numChoice)
 
     % MOVE M OUT OF ARTIFICIAL COLUMNS
     % loop through the artificial columns
-    for currArtificialCol = artificalCols
+    for artificialCol = artificalCols
         % find the row for artifical value of the current col
         for row = 2:size(Ab, 1)
-            if Ab(row, currArtificialCol) ~= 0
+            if Ab(row, artificialCol) ~= 0
                 sourcePivotRow = row;
                 break
             end
         end
 
         destPivotRow = 1; % objective function row
-        Ab = pivot(destPivotRow, currArtificialCol, sourcePivotRow, Ab);
+        Ab = pivot(destPivotRow, artificialCol, sourcePivotRow, Ab);
     end
 
     afterMoving = Ab % debug
 
     while true
         % FIND THE SMALLEST NEGATIVE COEFFICIENT IN THE OBJECTIVE FUNCTION (IN THE BASIC COLUMNS)
-        indexSmlSolCoeff = -1;
+        colSmlSolCoeff = -1;
         currSmallest = 0;
         for col = 2:(size(Ab, 2)-1)
             if Ab(1, col) < currSmallest
-                indexSmlSolCoeff = col;
+                colSmlSolCoeff = col;
                 currSmallest = Ab(1, col);
             end
         end
 
-        if indexSmlSolCoeff == -1
+        if colSmlSolCoeff == -1
             break % nothing left todo
         end
 
@@ -58,10 +58,10 @@ function values = maximize(Ab, numChoice)
         pivotRow = 0;
         % loop through all constraint rows (1st row is the objective function)
         for currRow = 2:size(Ab, 1)
-            if Ab(currRow, indexSmlSolCoeff) <= 0
+            if Ab(currRow, colSmlSolCoeff) <= 0
                 continue % skip if coefficient is not positive
             end
-            rowRatio = Ab(currRow, end)/Ab(currRow, indexSmlSolCoeff);
+            rowRatio = Ab(currRow, end)/Ab(currRow, colSmlSolCoeff);
             % if the ratio is the lowest and is positive
             if rowRatio <= minRatio && rowRatio >= 0
                 pivotRow = currRow;
@@ -75,7 +75,7 @@ function values = maximize(Ab, numChoice)
 
 
         % MAKE PIVOT EQUAL 1 BY DIVIDING PIVOT ROW BY PIVOT NUM
-        Ab(pivotRow, :) /= Ab(pivotRow, indexSmlSolCoeff);
+        Ab(pivotRow, :) /= Ab(pivotRow, colSmlSolCoeff);
 
         % MAKE EVERY OTHER ROW NUM IN PIVOT COL 0 BY ROW OPP
         for destPivotRow = 1:size(Ab, 1)
@@ -83,7 +83,7 @@ function values = maximize(Ab, numChoice)
                 continue
             end
 
-            Ab = pivot(destPivotRow, indexSmlSolCoeff, pivotRow, Ab);
+            Ab = pivot(destPivotRow, colSmlSolCoeff, pivotRow, Ab);
         end
 
         afterPivot = Ab % debug
