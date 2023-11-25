@@ -38,7 +38,7 @@ function values = maximize(Ab, numChoice)
 
     while true
         % FIND THE SMALLEST NEGATIVE COEFFICIENT IN THE OBJECTIVE FUNCTION (IN THE BASIC COLUMNS)
-        [minValue, minCol] = min([0 Ab(1, 2:end-1)])
+        [minValue, minCol] = min([0 Ab(1, 2:end-1)]);
 
         if minValue >= 0
             break % nothing left todo, at optimal solution
