@@ -34,7 +34,7 @@ maximize(Ab, 3) % should be [696 8 40 20 12 0 0 0 0 0 ]
 
 % hillier
 z = [1; 0; 0; 0]
-choice = [-3 -5 0 0 0; 1 0 1 0 0; 0 2 0 1 0; 3 2 0 0 1j
+choice = [-3 -5 0 0 0; 1 0 1 0 0; 0 2 0 1 0; 3 2 0 0 1]
 slack = []
 artificial = []
 b = [0; 4; 12; 18]
