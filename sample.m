@@ -7,7 +7,7 @@ Ab = [-1  -1   1   1   0   0   0   0   100   100   100   100   0 ;
        0   0   0   1   0   0   0  -1     0     0     0     1   0 ]
 maximize(Ab, 3)
 
-% from brilliant
+% brilliant
 z = [1; 0; 0]
 choice = [-7 -5; 2 3; 3 2]
 slack = [0 0; 1 0; 0 1]
@@ -50,7 +50,7 @@ b = [0; 4; 12; 18]
 Ab = [z choice slack artificial b]
 maximize(Ab, 2)
 
-% hiller p123
+% hillier p123
 z = [-1; 0; 0; 0]
 choice = [0.4 0.5; 0.3 0.1; 0.5 0.5; 0.6 0.4]
 slack = [0 0; 1 0; 0 0; 0 -1]
