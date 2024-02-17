@@ -45,7 +45,6 @@ function values = maximize(Ab, numChoice)
         end
 
 
-        % TODO Choose randomly if a tie
         % FIND THE CONSTRAINT ROW WITH THE SMALLEST POSITIVE RATIO
         minRatio = intmax;
         pivotRow = 0;
@@ -120,3 +119,4 @@ end
 function rounded = round5(M)
     rounded = round(M*100000)/100000;
 end
+
