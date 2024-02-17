@@ -1,6 +1,5 @@
 ## Linear Programming Lab Project
 
-
 _By James Pretorius_
 
 Linear Programming is a method to find the optimal solution to a function constrained by a system of linear equations. Linear Programming is often used to determine how to best allocate limited resources to minimize or maximize their effects. For instance, in Problem 1, we are asked to determine the minimum possible cost of providing blood given a list of constraints. This cost will be the sum of the costs of the individual blood types where the cost for an individual blood type equals the pints of blood used multiplied by the dollars per pint. For instance, type A blood costs 1\$ per pint, so its cost will be $1T_{A}$. In mathematical form, we get the following for the total cost.
@@ -91,7 +90,7 @@ Altogether we have the following.
 
 $$
 \begin{matrix}
- - z & - x_{1} & + x_{2} & + x_{3} & + s_{1} & + s_{2} & + s_{3} & + s_{4} & + Ma_{1} & + Ma_{2} & + Ma_{3} & + Ma_{4} & = 0 \\
+ z & - x_{1} & + x_{2} & + x_{3} & + s_{1} & + s_{2} & + s_{3} & + s_{4} & + Ma_{1} & + Ma_{2} & + Ma_{3} & + Ma_{4} & = 0 \\
  & x_{1} & - 2x_{2} & + x_{3} & + s_{1} & & & & & & & & = 11 \\
  & - 2x_{1} & & + x_{3} & & & & & + a_{1} & & & & = 1 \\
  & x_{1} & & & & + s_{2} & & & & + a_{2} & & & = 0 \\
